@@ -10,9 +10,9 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
-    <Authors>Project Author</Authors>
-    <Company>Project Author</Company>
-    <Copyright>Copyright © Project Author. All rights Reserved</Copyright>
+    <Authors>Victor Brito</Authors>
+    <Company>Victor Brito</Company>
+    <Copyright>Copyright © Victor Brito. All rights Reserved</Copyright>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/victorsebrito/SweetBuilders</PackageProjectUrl>
