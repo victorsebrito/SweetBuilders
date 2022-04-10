@@ -13,21 +13,31 @@ public class GenericBuilder<TObject> : BuilderBase<TObject, GenericBuilder<TObje
     {
     }
 
-    private GenericBuilder(Func<TObject> factory)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GenericBuilder{TObject}"/> class.
+    /// </summary>
+    /// <param name="factory">A factory of <typeparamref name="TObject"/>.</param>
+    public GenericBuilder(Func<TObject> factory)
         : base(factory)
     {
     }
 
 #pragma warning disable CA1000 // Do not declare static members on generic types
     /// <summary>
-    /// Gets a generic builder with an empty object factory. The parameterless constructor
-    /// will be called.
+    /// Gets a new instance of the <see cref="GenericBuilder{TObject}"/> class
+    /// with the default object factory.
+    /// </summary>
+    public static GenericBuilder<TObject> Default => new();
+
+    /// <summary>
+    /// Gets a new instance of the <see cref="GenericBuilder{TObject}"/> class
+    /// with an empty object factory. The parameterless constructor will be used.
     /// </summary>
     public static GenericBuilder<TObject> Empty
         => new GenericBuilder<TObject>(Factories.Empty<TObject>).OmitAutoProperties();
 
     /// <summary>
-    /// Gets new instance of the <see cref="GenericBuilder{TObject}"/> class with an
+    /// Gets a new instance of the <see cref="GenericBuilder{TObject}"/> class with an
     /// uninitialized object factory (does not use a constructor).
     /// </summary>
     public static GenericBuilder<TObject> Uninitalized

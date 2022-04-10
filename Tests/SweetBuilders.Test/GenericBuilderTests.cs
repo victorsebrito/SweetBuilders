@@ -24,6 +24,20 @@ public class GenericBuilderTests
     }
 
     [Fact]
+    public void ShouldCreateDefaultBuilder()
+    {
+        var builder = GenericBuilder<Bar>.Default;
+        var bar = builder.Create();
+
+        using (new AssertionScope())
+        {
+            bar.Id.Should().NotBeNull("it's set by the constructor");
+            bar.Name.Should().NotBeNull("the builder should generate all public properties");
+            bar.Status.Should().NotBeNull("the builder should generate all public properties");
+        }
+    }
+
+    [Fact]
     public void ShouldCreateEmptyBuilder()
     {
         var bar = GenericBuilder<Bar>.Empty
