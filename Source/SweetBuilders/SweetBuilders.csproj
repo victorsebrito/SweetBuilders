@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Build">
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <Product>SweetBuilders</Product>
+    <Description>A generic implementation of the Builder Pattern for C#, for those who love syntactic sugar. Built on the top of AutoFixture.</Description>
+    <PackageTags>Tag1;Tag2;Tag3</PackageTags>
+  </PropertyGroup>
+
+</Project>
