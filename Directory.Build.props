@@ -16,7 +16,6 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/victorsebrito/SweetBuilders</PackageProjectUrl>
-    <PackageIcon>Icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/victorsebrito/SweetBuilders.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
