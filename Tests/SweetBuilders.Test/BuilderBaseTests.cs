@@ -210,6 +210,20 @@ public class BuilderBaseTests
     }
 
     [Fact]
+    public void ShouldOmitAutoProperties()
+    {
+        var foo = Builder<Foo>.Auto
+            .OmitAutoProperties()
+            .Create();
+
+        using (new AssertionScope())
+        {
+            foo.Id.Should().BeNull("the builder should omit auto properties");
+            foo.Bar.Should().BeNull("the builder should omit auto properties");
+        }
+    }
+
+    [Fact]
     public void ShouldExcludeProperty()
     {
         var foo = Builder<Foo>.Auto
@@ -250,6 +264,34 @@ public class BuilderBaseTests
         using (new AssertionScope())
         {
             foo.Count().Should().Be(quantity, "the builder should generate the specified quantity of instances");
+        }
+    }
+
+    [Fact]
+    public void ShouldThrowIfFactoryIsNull()
+    {
+        var act = () => new FooBarInvalidBuilder();
+
+        using (new AssertionScope())
+        {
+            act.Should().Throw<ArgumentNullException>()
+                .WithParameterName("factory");
+        }
+    }
+
+    [Fact]
+    public void ShouldThrowIfPropertyNameIsNull()
+    {
+        var builder = Builder<Foo>.New;
+
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+        var act = () => builder.WithPrivate(null, string.Empty);
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+
+        using (new AssertionScope())
+        {
+            act.Should().Throw<ArgumentNullException>()
+                .WithParameterName("propertyName");
         }
     }
 
