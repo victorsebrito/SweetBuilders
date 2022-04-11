@@ -52,6 +52,16 @@ internal class BarBuilder : BuilderBase<Bar, BarBuilder>
 
     public BarBuilder() => this.With(x => x.Name, NAME);
 }
+
+internal class FooBarInvalidBuilder : BuilderBase<Foo, FooBarInvalidBuilder>
+{
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+    public FooBarInvalidBuilder()
+        : base(null)
+    {
+    }
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+}
 #pragma warning restore CS0169, IDE0051 // Remove unused private members
 #pragma warning restore SA1649 // File name should match first type name
 #pragma warning restore SA1402 // File may only contain a single type
