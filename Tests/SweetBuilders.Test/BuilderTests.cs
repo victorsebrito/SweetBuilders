@@ -53,7 +53,7 @@ public class BuilderTests
     [Fact]
     public void ShouldCreateUninitializedBuilder()
     {
-        var bar = Builder<Bar>.Uninitalized
+        var bar = Builder<Bar>.Uninitialized
             .Create();
 
         using (new AssertionScope())
