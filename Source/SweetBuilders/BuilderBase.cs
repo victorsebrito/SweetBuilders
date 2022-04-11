@@ -174,7 +174,7 @@ public abstract class BuilderBase<TObject, TBuilder>
     {
         // This is definitely not the best way to do this.
         // Will be improved in the future.
-        var expressionParts = propertyPicker.ToString().Split('.').Skip(1);
+        var expressionParts = propertyPicker.ToString().Split('.').Skip(1).ToList();
         if (!expressionParts.Any())
         {
             throw new ArgumentException("The expression must specify a property or field.", nameof(propertyPicker));

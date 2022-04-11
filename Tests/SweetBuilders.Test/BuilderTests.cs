@@ -5,13 +5,13 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using Xunit;
 
-public class GenericBuilderTests
+public class BuilderTests
 {
     [Fact]
     public void ShouldCreateBuilderWithCustomFactory()
     {
         var status = Guid.NewGuid().ToString();
-        var foo = GenericBuilder<Foo>.From(() => new Foo(status))
+        var foo = Builder<Foo>.From(() => new Foo(status))
             .Create();
 
         using (new AssertionScope())
@@ -26,7 +26,7 @@ public class GenericBuilderTests
     [Fact]
     public void ShouldCreateDefaultBuilder()
     {
-        var builder = GenericBuilder<Bar>.Default;
+        var builder = Builder<Bar>.Default;
         var bar = builder.Create();
 
         using (new AssertionScope())
@@ -40,7 +40,7 @@ public class GenericBuilderTests
     [Fact]
     public void ShouldCreateEmptyBuilder()
     {
-        var bar = GenericBuilder<Bar>.Empty
+        var bar = Builder<Bar>.Empty
             .Create();
 
         using (new AssertionScope())
@@ -53,7 +53,7 @@ public class GenericBuilderTests
     [Fact]
     public void ShouldCreateUninitializedBuilder()
     {
-        var bar = GenericBuilder<Bar>.Uninitalized
+        var bar = Builder<Bar>.Uninitalized
             .Create();
 
         using (new AssertionScope())
