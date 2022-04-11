@@ -11,7 +11,7 @@ using Xunit;
 public class BuilderBaseTests
 {
     [Fact]
-    public void ShouldCreateDefaultBuilder()
+    public void ShouldCreateCustomBuilderWithDefaultFactory()
     {
         var builder = new BarBuilder();
         var bar = builder.Create();
@@ -19,7 +19,7 @@ public class BuilderBaseTests
         using (new AssertionScope())
         {
             bar.Id.Should().NotBeNull("the builder should use the default constructor");
-            bar.Status.Should().NotBeNull("the builder should generate all public properties");
+            bar.Status.Should().BeNull("the builder should omit auto properties");
             bar.Name.Should().Be(BarBuilder.NAME, "the builder base should use the generic type constructor");
         }
     }
@@ -32,8 +32,8 @@ public class BuilderBaseTests
 
         using (new AssertionScope())
         {
-            foo.Id.Should().NotBeNull("the builder should generate all public properties");
-            foo.Bar.Should().NotBeNull("the builder should generate all public properties");
+            foo.Id.Should().BeNull("the builder should omit auto properties");
+            foo.Bar.Should().BeNull("the builder should omit auto properties");
             foo.Name.Should().Be(FooBuilder.NAME, "the builder base should use the generic type constructor");
             foo.Status.Should().Be(FooBuilder.STATUS, "the builder should use the provided factory");
         }
@@ -44,7 +44,6 @@ public class BuilderBaseTests
     {
         var value = Guid.NewGuid().ToString();
         var bar = new BarBuilder()
-            .OmitAutoProperties()
             .Do(x => x.Status = value)
             .Create();
 
@@ -55,23 +54,9 @@ public class BuilderBaseTests
     }
 
     [Fact]
-    public void ShouldOmitAutoProperties()
-    {
-        var bar = new BarBuilder()
-            .OmitAutoProperties()
-            .Create();
-
-        using (new AssertionScope())
-        {
-            bar.Status.Should().BeNull("the builder should omit auto properties");
-        }
-    }
-
-    [Fact]
     public void ShouldIncludeProperty()
     {
         var foo = new FooBuilder()
-            .OmitAutoProperties()
             .With(x => x.Id)
             .Create();
 
@@ -87,7 +72,6 @@ public class BuilderBaseTests
     {
         var value = new Random().Next();
         var foo = new FooBuilder()
-            .OmitAutoProperties()
             .With(x => x.Id, value)
             .Create();
 
@@ -104,7 +88,6 @@ public class BuilderBaseTests
         var factoryCount = 0;
 
         var foos = new FooBuilder()
-            .OmitAutoProperties()
             .With(x => x.Id, () => ++factoryCount)
             .CreateMany(2).ToList();
 
@@ -123,7 +106,6 @@ public class BuilderBaseTests
 #pragma warning disable CS8603 // Possible null reference return.
 #pragma warning disable CA1305 // Specify IFormatProvider
         var foos = new FooBuilder()
-            .OmitAutoProperties()
             .With<string, int>(x => x.Name, (i) => i.ToString())
             .CreateMany(2).ToList();
 #pragma warning restore CA1305 // Specify IFormatProvider
@@ -230,16 +212,15 @@ public class BuilderBaseTests
     [Fact]
     public void ShouldExcludeProperty()
     {
-        var foo = Builder<Foo>.Uninitialized
-            .WithAutoProperties()
-            .Without(x => x.Name)
+        var foo = Builder<Foo>.Auto
+            .Without(x => x.Id)
             .Create();
 
         using (new AssertionScope())
         {
-            foo.Id.Should().NotBeNull("the builder should generate all public properties");
+            foo.Id.Should().BeNull("the builder should exclude specified properties");
             foo.Bar.Should().NotBeNull("the builder should generate all public properties");
-            foo.Name.Should().BeNull("the builder should exclude specified properties");
+            foo.Name.Should().NotBeNull("the builder should generate all public properties");
         }
     }
 

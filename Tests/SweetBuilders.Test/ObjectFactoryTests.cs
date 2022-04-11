@@ -7,23 +7,23 @@ using Xunit;
 public class ObjectFactoryTests
 {
     [Fact]
-    public void ShouldCreateEmptyInstanceWithPublicConstructor()
+    public void ShouldCreateDefaultInstanceWithPublicConstructor()
     {
-        var bar = Factories.Empty<Bar>(true);
+        var bar = Factories.Default<Bar>(true);
         bar.Id.Should().NotBeNull();
     }
 
     [Fact]
-    public void ShouldCreateEmptyInstanceWithPrivateConstructor()
+    public void ShouldCreateDefaultInstanceWithPrivateConstructor()
     {
-        var foo = Factories.Empty<Foo>();
+        var foo = Factories.Default<Foo>();
         foo.Name.Should().NotBeNull();
     }
 
     [Fact]
     public void ShouldThrowExceptionIfOnlyPrivateConstructorIsAvailable()
     {
-        var act = () => Factories.Empty<Foo>(false);
+        var act = () => Factories.Default<Foo>(false);
         act.Should().Throw<MissingMethodException>();
     }
 

@@ -14,7 +14,7 @@ public static class Factories
     /// </summary>
     /// <typeparam name="T">The type to create an instance of.</typeparam>
     /// <returns>An instance of <typeparamref name="T"/>.</returns>
-    public static T Empty<T>() => Empty<T>(true);
+    public static T Default<T>() => Default<T>(true);
 
     /// <summary>
     /// Creates an instance of <typeparamref name="T"/> using the default
@@ -24,7 +24,7 @@ public static class Factories
     /// <param name="nonPublic">true if a public or nonpublic default constructor can match;
     /// false if only a public default constructor can match.</param>
     /// <returns>An instance of <typeparamref name="T"/>.</returns>
-    public static T Empty<T>(bool nonPublic) => (T)Activator.CreateInstance(typeof(T), nonPublic);
+    public static T Default<T>(bool nonPublic) => (T)Activator.CreateInstance(typeof(T), nonPublic);
 
     /// <summary>
     /// Creates an uninitialized instance of <typeparamref name="T"/>.

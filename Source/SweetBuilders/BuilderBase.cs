@@ -19,7 +19,8 @@ public abstract class BuilderBase<TObject, TBuilder>
     /// <summary>
     /// Initializes a new instance of the <see cref="BuilderBase{TObject, TBuilder}"/> class.
     /// </summary>
-    protected BuilderBase() => this.Composer = this.Fixture.Build<TObject>();
+    protected BuilderBase() => this.Composer = this.Fixture.Build<TObject>()
+            .FromFactory(Factories.Default<TObject>);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BuilderBase{TObject, TBuilder}"/> class.
@@ -36,7 +37,10 @@ public abstract class BuilderBase<TObject, TBuilder>
         this.Composer = customizationComposer.FromFactory(factory);
     }
 
-    private Fixture Fixture { get; } = new Fixture();
+    private Fixture Fixture { get; } = new Fixture
+    {
+        OmitAutoProperties = true,
+    };
 
     private IPostprocessComposer<TObject> Composer { get; set; }
 
