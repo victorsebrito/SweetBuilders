@@ -215,7 +215,7 @@ public class BuilderBaseTests
     [Fact]
     public void ShouldIncludeAutoProperties()
     {
-        var foo = Builder<Foo>.Uninitalized
+        var foo = Builder<Foo>.Uninitialized
             .WithAutoProperties()
             .Create();
 
@@ -230,7 +230,7 @@ public class BuilderBaseTests
     [Fact]
     public void ShouldExcludeProperty()
     {
-        var foo = Builder<Foo>.Uninitalized
+        var foo = Builder<Foo>.Uninitialized
             .WithAutoProperties()
             .Without(x => x.Name)
             .Create();
@@ -246,7 +246,7 @@ public class BuilderBaseTests
     [Fact]
     public void ShouldCreateManyInstancies()
     {
-        var foo = Builder<Foo>.Uninitalized
+        var foo = Builder<Foo>.Uninitialized
             .WithAutoProperties()
             .Without(x => x.Name)
             .CreateMany();
@@ -261,7 +261,7 @@ public class BuilderBaseTests
     public void ShouldCreateNInstancies()
     {
         var quantity = new Random().Next(10);
-        var foo = Builder<Foo>.Uninitalized
+        var foo = Builder<Foo>.Uninitialized
             .WithAutoProperties()
             .Without(x => x.Name)
             .CreateMany(quantity);

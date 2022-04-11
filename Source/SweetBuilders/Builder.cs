@@ -40,7 +40,7 @@ public class Builder<TObject> : BuilderBase<TObject, Builder<TObject>>
     /// Gets a new instance of the <see cref="Builder{TObject}"/> class with an
     /// uninitialized object factory (does not use a constructor).
     /// </summary>
-    public static Builder<TObject> Uninitalized
+    public static Builder<TObject> Uninitialized
         => new Builder<TObject>(Factories.Uninitialized<TObject>).OmitAutoProperties();
 
     /// <summary>
