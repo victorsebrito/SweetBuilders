@@ -27,21 +27,19 @@ public class Builder<TObject> : BuilderBase<TObject, Builder<TObject>>
     /// Gets a new instance of the <see cref="Builder{TObject}"/> class
     /// with the default object factory.
     /// </summary>
-    public static Builder<TObject> Default => new();
+    public static Builder<TObject> New => new();
 
     /// <summary>
     /// Gets a new instance of the <see cref="Builder{TObject}"/> class
-    /// with an empty object factory. The parameterless constructor will be used.
+    /// with auto properties enabled.
     /// </summary>
-    public static Builder<TObject> Empty
-        => new Builder<TObject>(Factories.Empty<TObject>).OmitAutoProperties();
+    public static Builder<TObject> Auto => new Builder<TObject>().WithAutoProperties();
 
     /// <summary>
     /// Gets a new instance of the <see cref="Builder{TObject}"/> class with an
     /// uninitialized object factory (does not use a constructor).
     /// </summary>
-    public static Builder<TObject> Uninitialized
-        => new Builder<TObject>(Factories.Uninitialized<TObject>).OmitAutoProperties();
+    public static Builder<TObject> Uninitialized => new(Factories.Uninitialized<TObject>);
 
     /// <summary>
     /// Provides a generic builder with a specific factory.

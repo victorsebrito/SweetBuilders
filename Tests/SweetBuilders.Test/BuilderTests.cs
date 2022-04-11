@@ -16,17 +16,17 @@ public class BuilderTests
 
         using (new AssertionScope())
         {
-            foo.Id.Should().NotBeNull("the builder should generate all public properties");
-            foo.Name.Should().NotBeNull("the builder should generate all public properties");
-            foo.Bar.Should().NotBeNull("the builder should generate all public properties");
+            foo.Id.Should().BeNull("the builder should omit auto properties");
+            foo.Name.Should().BeNull("the builder should omit auto properties");
+            foo.Bar.Should().BeNull("the builder should omit auto properties");
             foo.Status.Should().Be(status, "the builder should use the provided factory");
         }
     }
 
     [Fact]
-    public void ShouldCreateDefaultBuilder()
+    public void ShouldCreateAutoBuilder()
     {
-        var builder = Builder<Bar>.Default;
+        var builder = Builder<Bar>.Auto;
         var bar = builder.Create();
 
         using (new AssertionScope())
@@ -38,9 +38,9 @@ public class BuilderTests
     }
 
     [Fact]
-    public void ShouldCreateEmptyBuilder()
+    public void ShouldCreateNewBuilder()
     {
-        var bar = Builder<Bar>.Empty
+        var bar = Builder<Bar>.New
             .Create();
 
         using (new AssertionScope())
