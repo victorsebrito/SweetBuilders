@@ -279,6 +279,22 @@ public class BuilderBaseTests
         }
     }
 
+    [Fact]
+    public void ShouldThrowIfPropertyNameIsNull()
+    {
+        var builder = Builder<Foo>.New;
+
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+        var act = () => builder.WithPrivate(null, string.Empty);
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+
+        using (new AssertionScope())
+        {
+            act.Should().Throw<ArgumentNullException>()
+                .WithParameterName("propertyName");
+        }
+    }
+
     private static T? GetPrivateFieldOrPropertyValue<T>(object @object, string fieldName)
     {
         var flags = BindingFlags.Instance |
