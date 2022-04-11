@@ -44,6 +44,8 @@ jobs:
       - name: "Dotnet Cake Test"
         run: dotnet cake --target=Test
         shell: pwsh
+      - name: "Upload Test Coverage to Codecov"
+        uses: codecov/codecov-action@v2
       - name: "Dotnet Cake Pack"
         run: dotnet cake --target=Pack
         shell: pwsh
