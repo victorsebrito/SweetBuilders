@@ -19,23 +19,13 @@ public abstract class BuilderBase<TObject, TBuilder>
     /// <summary>
     /// Initializes a new instance of the <see cref="BuilderBase{TObject, TBuilder}"/> class.
     /// </summary>
-    protected BuilderBase() => this.Composer = this.Fixture.Build<TObject>()
-            .FromFactory(Factories.Default<TObject>);
+    protected BuilderBase() => this.Composer = this.SetupComposer(Factories.Default<TObject>);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BuilderBase{TObject, TBuilder}"/> class.
     /// </summary>
     /// <param name="factory">A factory of the <typeparamref name="TObject"/> class.</param>
-    protected BuilderBase(Func<TObject> factory)
-    {
-        if (factory == null)
-        {
-            throw new ArgumentNullException(nameof(factory));
-        }
-
-        var customizationComposer = this.Fixture.Build<TObject>();
-        this.Composer = customizationComposer.FromFactory(factory);
-    }
+    protected BuilderBase(Func<TObject> factory) => this.Composer = this.SetupComposer(factory);
 
     private Fixture Fixture { get; } = new Fixture
     {
@@ -285,4 +275,23 @@ public abstract class BuilderBase<TObject, TBuilder>
     /// <param name="count">The number of objects to create.</param>
     /// <returns>A sequence of anonymous objects of type <typeparamref name="TObject"/>.</returns>
     public IEnumerable<TObject> CreateMany(int count) => this.Composer.CreateMany(count);
+
+    /// <summary>
+    /// Configures the Fixture before bootstrapping the builder.
+    /// </summary>
+    /// <param name="fixture">The Fixture instance associated with the builder.</param>
+    protected virtual void SetupFixture(Fixture fixture)
+    {
+    }
+
+    private IPostprocessComposer<TObject> SetupComposer(Func<TObject> factory)
+    {
+        if (factory == null)
+        {
+            throw new ArgumentNullException(nameof(factory));
+        }
+
+        this.SetupFixture(this.Fixture);
+        return this.Fixture.Build<TObject>().FromFactory(factory);
+    }
 }

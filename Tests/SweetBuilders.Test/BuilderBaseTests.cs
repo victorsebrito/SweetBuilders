@@ -270,7 +270,7 @@ public class BuilderBaseTests
     [Fact]
     public void ShouldThrowIfFactoryIsNull()
     {
-        var act = () => new FooBarInvalidBuilder();
+        var act = () => new FooInvalidBuilder();
 
         using (new AssertionScope())
         {
@@ -292,6 +292,21 @@ public class BuilderBaseTests
         {
             act.Should().Throw<ArgumentNullException>()
                 .WithParameterName("propertyName");
+        }
+    }
+
+    [Fact]
+    public void ShouldRespectFixtureCustomizations()
+    {
+        var foo = new FooBuilderCustomFixture()
+            .Create();
+
+        using (new AssertionScope())
+        {
+            foo.Bar.Should().NotBeNull("the builder should generate all public properties");
+            foo.Bar?.Name.Should().Be(
+                FooBuilderCustomFixture.NAME,
+                "the builder should respect any Fixture customizations");
         }
     }
 
