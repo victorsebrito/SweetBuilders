@@ -19,18 +19,35 @@ public abstract class BuilderBase<TObject, TBuilder>
     /// <summary>
     /// Initializes a new instance of the <see cref="BuilderBase{TObject, TBuilder}"/> class.
     /// </summary>
-    protected BuilderBase() => this.Composer = this.SetupComposer(Factories.Default<TObject>);
+    protected BuilderBase()
+        : this(CreateComposer())
+    {
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BuilderBase{TObject, TBuilder}"/> class.
     /// </summary>
-    /// <param name="factory">A factory of the <typeparamref name="TObject"/> class.</param>
-    protected BuilderBase(Func<TObject> factory) => this.Composer = this.SetupComposer(factory);
-
-    private Fixture Fixture { get; } = new Fixture
+    /// <param name="factory">A factory of <typeparamref name="TObject"/>.</param>
+    protected BuilderBase(Func<TObject> factory)
+        : this(CreateComposer().FromFactory(factory))
     {
-        OmitAutoProperties = true,
-    };
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BuilderBase{TObject, TBuilder}"/> class.
+    /// </summary>
+    /// <param name="fixture">The fixture that will be used to initialize the builder.</param>
+    protected BuilderBase(Fixture fixture)
+        : this(CreateComposer(fixture))
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BuilderBase{TObject, TBuilder}"/> class.
+    /// </summary>
+    /// <param name="composer">The composer that will be used by the builder.</param>
+    protected BuilderBase(IPostprocessComposer<TObject>? composer = null)
+        => this.Composer = composer ?? CreateComposer();
 
     private IPostprocessComposer<TObject> Composer { get; set; }
 
@@ -276,22 +293,14 @@ public abstract class BuilderBase<TObject, TBuilder>
     /// <returns>A sequence of anonymous objects of type <typeparamref name="TObject"/>.</returns>
     public IEnumerable<TObject> CreateMany(int count) => this.Composer.CreateMany(count);
 
-    /// <summary>
-    /// Configures the Fixture before bootstrapping the builder.
-    /// </summary>
-    /// <param name="fixture">The Fixture instance associated with the builder.</param>
-    protected virtual void SetupFixture(Fixture fixture)
+    private static Fixture CreateFixture() => new()
     {
-    }
+        OmitAutoProperties = true,
+    };
 
-    private IPostprocessComposer<TObject> SetupComposer(Func<TObject> factory)
+    private static ICustomizationComposer<TObject> CreateComposer(Fixture? fixture = null)
     {
-        if (factory == null)
-        {
-            throw new ArgumentNullException(nameof(factory));
-        }
-
-        this.SetupFixture(this.Fixture);
-        return this.Fixture.Build<TObject>().FromFactory(factory);
+        fixture ??= CreateFixture();
+        return fixture.Build<TObject>();
     }
 }

@@ -268,18 +268,6 @@ public class BuilderBaseTests
     }
 
     [Fact]
-    public void ShouldThrowIfFactoryIsNull()
-    {
-        var act = () => new FooInvalidBuilder();
-
-        using (new AssertionScope())
-        {
-            act.Should().Throw<ArgumentNullException>()
-                .WithParameterName("factory");
-        }
-    }
-
-    [Fact]
     public void ShouldThrowIfPropertyNameIsNull()
     {
         var builder = Builder<Foo>.New;

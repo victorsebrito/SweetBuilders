@@ -54,24 +54,23 @@ internal class BarBuilder : BuilderBase<Bar, BarBuilder>
     public BarBuilder() => this.With(x => x.Name, NAME);
 }
 
-internal class FooInvalidBuilder : BuilderBase<Foo, FooInvalidBuilder>
-{
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-    public FooInvalidBuilder()
-        : base(null)
-    {
-    }
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
-}
-
 internal class FooBuilderCustomFixture : BuilderBase<Foo, FooBuilderCustomFixture>
 {
     internal static readonly string NAME = Guid.NewGuid().ToString();
 
-    protected override void SetupFixture(Fixture fixture)
+    public FooBuilderCustomFixture()
+        : base(CreateFixture())
     {
-        fixture.OmitAutoProperties = false;
+    }
+
+    private static Fixture CreateFixture()
+    {
+        var fixture = new Fixture
+        {
+            OmitAutoProperties = false,
+        };
         fixture.Customize<Bar>(bar => bar.With(x => x.Name, NAME));
+        return fixture;
     }
 }
 #pragma warning restore CS0169, IDE0051 // Remove unused private members
