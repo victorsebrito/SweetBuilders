@@ -1,6 +1,7 @@
 namespace SweetBuilders.Test;
 
 using System;
+using AutoFixture;
 
 #pragma warning disable CS0169, IDE0051 // Remove unused private members
 #pragma warning disable SA1649 // File name should match first type name
@@ -53,14 +54,24 @@ internal class BarBuilder : BuilderBase<Bar, BarBuilder>
     public BarBuilder() => this.With(x => x.Name, NAME);
 }
 
-internal class FooBarInvalidBuilder : BuilderBase<Foo, FooBarInvalidBuilder>
+internal class FooBuilderCustomFixture : BuilderBase<Foo, FooBuilderCustomFixture>
 {
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-    public FooBarInvalidBuilder()
-        : base(null)
+    internal static readonly string NAME = Guid.NewGuid().ToString();
+
+    public FooBuilderCustomFixture()
+        : base(CreateFixture())
     {
     }
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+
+    private static Fixture CreateFixture()
+    {
+        var fixture = new Fixture
+        {
+            OmitAutoProperties = false,
+        };
+        fixture.Customize<Bar>(bar => bar.With(x => x.Name, NAME));
+        return fixture;
+    }
 }
 #pragma warning restore CS0169, IDE0051 // Remove unused private members
 #pragma warning restore SA1649 // File name should match first type name

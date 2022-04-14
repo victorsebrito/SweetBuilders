@@ -19,28 +19,35 @@ public abstract class BuilderBase<TObject, TBuilder>
     /// <summary>
     /// Initializes a new instance of the <see cref="BuilderBase{TObject, TBuilder}"/> class.
     /// </summary>
-    protected BuilderBase() => this.Composer = this.Fixture.Build<TObject>()
-            .FromFactory(Factories.Default<TObject>);
+    protected BuilderBase()
+        : this(CreateComposer())
+    {
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BuilderBase{TObject, TBuilder}"/> class.
     /// </summary>
-    /// <param name="factory">A factory of the <typeparamref name="TObject"/> class.</param>
+    /// <param name="factory">A factory of <typeparamref name="TObject"/>.</param>
     protected BuilderBase(Func<TObject> factory)
+        : this(CreateComposer().FromFactory(factory))
     {
-        if (factory == null)
-        {
-            throw new ArgumentNullException(nameof(factory));
-        }
-
-        var customizationComposer = this.Fixture.Build<TObject>();
-        this.Composer = customizationComposer.FromFactory(factory);
     }
 
-    private Fixture Fixture { get; } = new Fixture
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BuilderBase{TObject, TBuilder}"/> class.
+    /// </summary>
+    /// <param name="fixture">The fixture that will be used to initialize the builder.</param>
+    protected BuilderBase(Fixture fixture)
+        : this(CreateComposer(fixture))
     {
-        OmitAutoProperties = true,
-    };
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BuilderBase{TObject, TBuilder}"/> class.
+    /// </summary>
+    /// <param name="composer">The composer that will be used by the builder.</param>
+    protected BuilderBase(IPostprocessComposer<TObject>? composer = null)
+        => this.Composer = composer ?? CreateComposer();
 
     private IPostprocessComposer<TObject> Composer { get; set; }
 
@@ -285,4 +292,15 @@ public abstract class BuilderBase<TObject, TBuilder>
     /// <param name="count">The number of objects to create.</param>
     /// <returns>A sequence of anonymous objects of type <typeparamref name="TObject"/>.</returns>
     public IEnumerable<TObject> CreateMany(int count) => this.Composer.CreateMany(count);
+
+    private static Fixture CreateFixture() => new()
+    {
+        OmitAutoProperties = true,
+    };
+
+    private static ICustomizationComposer<TObject> CreateComposer(Fixture? fixture = null)
+    {
+        fixture ??= CreateFixture();
+        return fixture.Build<TObject>();
+    }
 }
