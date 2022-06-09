@@ -89,7 +89,7 @@ This feature is not supported by AutoFixture, but it's very useful in many scena
 1. Public properties with private sets
 
 ```c#
-var foo = Builder<Foo>.Empty
+var foo = Builder<Foo>.New
   .WithPrivate(x => x.Id, "abc")
   .Create();
 
@@ -99,7 +99,7 @@ Console.WriteLine(foo.Id); // abc
 2. Private properties and fields
 
 ```c#
-var bar = Builder<Bar>.Empty
+var bar = Builder<Bar>.New
   .WithPrivate("id", "xyz")
   .Create();
 
