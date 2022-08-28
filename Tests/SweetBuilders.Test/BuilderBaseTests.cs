@@ -195,6 +195,20 @@ public class BuilderBaseTests
     }
 
     [Fact]
+    public void ShouldSetPropertyWithoutSet()
+    {
+        var value = Guid.NewGuid().ToString();
+        var foo = new FooBuilder()
+            .WithPrivate(x => x.Other, value)
+            .Create();
+
+        using (new AssertionScope())
+        {
+            foo.Other.Should().Be(value, "the builder should set the property value");
+        }
+    }
+
+    [Fact]
     public void ShouldIncludeAutoProperties()
     {
         var foo = Builder<Foo>.Uninitialized

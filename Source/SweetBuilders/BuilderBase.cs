@@ -2,9 +2,7 @@ namespace SweetBuilders;
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq.Expressions;
-using System.Reflection;
 using AutoFixture;
 using AutoFixture.Dsl;
 
@@ -182,17 +180,7 @@ public abstract class BuilderBase<TObject, TBuilder>
     /// post-processing of created specimens.
     /// </returns>
     public TBuilder WithPrivate<TProperty, TValue>(Expression<Func<TObject, TProperty>> propertyPicker, TValue value)
-    {
-        // This is definitely not the best way to do this.
-        // Will be improved in the future.
-        var expressionParts = propertyPicker.ToString().Split('.').Skip(1).ToList();
-        if (!expressionParts.Any())
-        {
-            throw new ArgumentException("The expression must specify a property or field.", nameof(propertyPicker));
-        }
-
-        return this.WithPrivate(expressionParts.First(), value);
-    }
+        => this.Builder.SetPrivate(propertyPicker, value);
 
     /// <summary>
     /// Registers that a writable property or field should be assigned a specific value as
@@ -211,34 +199,7 @@ public abstract class BuilderBase<TObject, TBuilder>
     /// post-processing of created specimens.
     /// </returns>
     public TBuilder WithPrivate<TValue>(string propertyName, TValue value)
-    {
-        if (propertyName == null)
-        {
-            throw new ArgumentNullException(nameof(propertyName));
-        }
-
-        var propertyParts = propertyName.Split('.');
-        if (propertyParts.Length > 1)
-        {
-            throw new ArgumentException("The expression must not contain access to a nested property or field.", nameof(propertyName));
-        }
-
-        this.Composer = this.Composer.Do(x =>
-        {
-            // We need to include BindingFlags.Public to be able to retrieve
-            // public properties with private sets. This ends up making this
-            // method able to set public properties and fields also.
-            // Preventing that would be costly, so I won't, for now. :)
-            var flags = BindingFlags.Instance |
-                        BindingFlags.SetField |
-                        BindingFlags.SetProperty |
-                        BindingFlags.NonPublic |
-                        BindingFlags.Public;
-
-            _ = typeof(TObject).InvokeMember(propertyName, flags, null, x, new object?[] { value }, CultureInfo.InvariantCulture);
-        });
-        return this.Builder;
-    }
+        => this.Builder.SetPrivate<TObject, TBuilder, TValue>(propertyName, value);
 
     /// <summary>
     /// Enables auto-properties for a type of specimen.

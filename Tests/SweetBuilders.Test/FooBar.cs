@@ -20,6 +20,8 @@ internal class Foo
 
     public string? Status { get; private set; }
 
+    public string? Other { get; }
+
     public Bar? Bar { get; set; }
 
     private string? PrivateProperty { get; set; }
