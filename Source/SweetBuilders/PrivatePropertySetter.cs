@@ -80,7 +80,7 @@ internal static class PrivatePropertySetter
                 SetPrivatePropertyValue(propertyInfo, @object, value);
                 break;
             case PropertyInfo:
-                SetBackingFieldValue(propertyName, @object, value);
+                TrySetBackingFieldValue(propertyName, @object, value);
                 break;
             case FieldInfo fieldInfo:
                 SetPrivateFieldValue(fieldInfo, @object, value);
@@ -93,10 +93,15 @@ internal static class PrivatePropertySetter
     private static void SetPrivatePropertyValue<TObject, TValue>(PropertyInfo propertyInfo, TObject @object, TValue value) =>
         propertyInfo.SetMethod.Invoke(@object, BindingFlags, null, new object?[] { value }, CultureInfo.InvariantCulture);
 
-    private static void SetBackingFieldValue<TObject, TValue>(string propertyName, TObject @object, TValue value)
+    private static void TrySetBackingFieldValue<TObject, TValue>(string propertyName, TObject @object, TValue value)
     {
         var backingField = $"<{propertyName}>k__BackingField";
         var backingFieldInfo = typeof(TObject).GetField(backingField, BindingFlags);
+        if (backingFieldInfo == null)
+        {
+            throw new InvalidOperationException($"Could not set value of property {propertyName}");
+        }
+
         SetPrivateFieldValue(backingFieldInfo, @object, value);
     }
 
